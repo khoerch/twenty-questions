@@ -22,25 +22,36 @@ const Title = styled.h1`
   color: #1a1a1a;
 `;
 
+// API base URL
+const API_URL = 'http://localhost:8000';
+
 function App() {
   const [questions, setQuestions] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [currentHint, setCurrentHint] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
-  // Temporary implementation of evaluateQuestion
   const evaluateQuestion = async (question) => {
-    // This is a placeholder - in a real implementation, this would call your LLM API
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // Simple mock response
-        resolve({
-          answer: Math.random() > 0.5 ? 'YES' : 'NO',
-          relevance: Math.floor(Math.random() * 100),
-          isCorrect: Math.random() > 0.95 ? true : false // Set to true only when they guess correctly
-        });
-      }, 500);
-    });
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch(`${API_URL}/questions/evaluate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to evaluate question');
+      }
+      
+      return await response.json();
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleNewQuestion = async (question) => {
@@ -88,7 +99,7 @@ function App() {
       
       <QuestionInput 
         onSubmit={handleNewQuestion}
-        disabled={questions.length >= 20 || showSuccess}
+        disabled={questions.length >= 20 || showSuccess || isLoading}
       />
       
       <QuestionHistory questions={questions} />
