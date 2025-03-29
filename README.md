@@ -92,7 +92,7 @@ make start-frontend
 make start-backend
 ```
 
-- Frontend will be available at: http://localhost:8080
+- Frontend will be available at: http://localhost:3000
 - Backend will be available at: http://localhost:8000
 
 ## Game Rules
