@@ -37,7 +37,7 @@ function App() {
         resolve({
           answer: Math.random() > 0.5 ? 'YES' : 'NO',
           relevance: Math.floor(Math.random() * 100),
-          isCorrect: Math.random() > 0.5 ? true : false // Set to true only when they guess correctly
+          isCorrect: Math.random() > 0.95 ? true : false // Set to true only when they guess correctly
         });
       }, 500);
     });
