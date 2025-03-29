@@ -11,9 +11,62 @@ A simple 20 Questions game where users try to guess a daily noun by asking yes/n
 
 ### Prerequisites
 
-- Node.js (v14+)
-- Python (v3.8+)
+- Node.js
+- Python
 - npm or yarn
+- make (Required for running Makefile commands)
+
+### Installing Make
+
+#### macOS
+1. Using Homebrew (recommended):
+```bash
+brew install make
+```
+
+2. Using Xcode Command Line Tools:
+```bash
+xcode-select --install
+```
+
+#### Windows
+1. Using Chocolatey (recommended):
+```bash
+choco install make
+```
+
+2. Using Windows Subsystem for Linux (WSL):
+- Install WSL from Microsoft Store
+- Then install make within WSL:
+```bash
+sudo apt-get update
+sudo apt-get install make
+```
+
+3. Using Git Bash:
+- Make comes pre-installed with Git for Windows
+- Download from: https://gitforwindows.org/
+
+#### Linux
+- Ubuntu/Debian:
+```bash
+sudo apt-get update
+sudo apt-get install make
+```
+- Fedora:
+```bash
+sudo dnf install make
+```
+- CentOS/RHEL:
+```bash
+sudo yum install make
+```
+
+### Verifying Installation
+To verify make is installed correctly:
+```bash
+make --version
+```
 
 ### Installation
 
