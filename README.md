@@ -132,3 +132,13 @@ twenty-questions/
 ├── Makefile # Commands for running the application
 └── README.md # Project documentation
 ```
+
+## Future Improvements
+
+1. Create the SuccessModal component for when users win
+2. Create the HintPanel component
+3. Set up the backend API for question evaluation
+    - Added a FastAPI backend, but it's a very basic implementation. 
+4. Implement the LLM integration for processing questions
+5. Create a daily answer system
+6. Add local storage for maintaining game state
