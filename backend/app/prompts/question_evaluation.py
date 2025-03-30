@@ -29,11 +29,11 @@ def get_question_evaluation_prompt(solution):
 
     Example output:
     BEGIN JSON
-        {
+        {{
             "is_yes_no": true,
             "answer": "YES",
             "relevance": 80,
             "is_correct": false
-        }
+        }}
     END JSON
     """

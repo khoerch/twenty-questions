@@ -1,14 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.api.models.question import Question, QuestionEvaluation
-from app.services.llm_service import evaluate_question_with_llm
 from app.config import DAILY_SOLUTION
+from app.services.llm_service import LLMService
 
-router = APIRouter(prefix="/questions", tags=["questions"])
+router = APIRouter(prefix="/api/questions", tags=["questions"])
 
 @router.post("/evaluate", response_model=QuestionEvaluation)
-async def evaluate_question(question: Question):
-    # Call LLM service to evaluate the question
-    evaluation = await evaluate_question_with_llm(question.text, DAILY_SOLUTION)
+async def evaluate_question(
+    question: Question,
+    llm_service: LLMService = Depends()
+):
+    evaluation = await llm_service.evaluate_question(question.text, DAILY_SOLUTION)
     
     return QuestionEvaluation(
         is_yes_no=evaluation.get("is_yes_no", False),

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:8000/api';
 
 export const evaluateQuestion = async (question) => {
   try {
