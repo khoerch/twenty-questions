@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 from typing import Optional
 
-class SolutionResponse(BaseModel):
+class SolutionHintResponse(BaseModel):
     date: date
     hint: str
     
@@ -14,6 +14,6 @@ class SolutionCreateRequest(BaseModel):
     solution: Optional[str] = None
     hint: Optional[str] = None
     
-class SolutionFullResponse(SolutionResponse):
+class SolutionFullResponse(SolutionHintResponse):
     solution: str
     difficulty: int

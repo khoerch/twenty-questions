@@ -1,7 +1,7 @@
 import json
 import logging
 from fastapi import HTTPException
-from app.config import openai_client, OPENAI_API_KEY
+from app.core.config import openai_client, OPENAI_API_KEY
 from app.prompts.question_evaluation import get_question_evaluation_prompt
 from app.prompts.solution_generation import get_solution_generation_prompt
 

@@ -1,12 +1,16 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, Request
+from app.core.limiter import limiter
 from app.api.models.question import Question, QuestionEvaluation
-from app.config import DAILY_SOLUTION
+from app.core.config import DAILY_SOLUTION
 from app.services.llm_service import LLMService
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
 @router.post("/evaluate", response_model=QuestionEvaluation)
+@limiter.limit("20/minute")
+@limiter.limit("100/day")
 async def evaluate_question(
+    request: Request,
     question: Question,
     llm_service: LLMService = Depends()
 ):
