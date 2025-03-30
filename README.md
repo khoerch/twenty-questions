@@ -140,5 +140,6 @@ twenty-questions/
 3. Set up the backend API for question evaluation
     - Added a FastAPI backend, but it's a very basic implementation. 
 4. Implement the LLM integration for processing questions
+    - Consider caching and rate limiting to avoid high costs
 5. Create a daily answer system
 6. Add local storage for maintaining game state

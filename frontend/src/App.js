@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import QuestionInput from './components/QuestionInput';
 import QuestionHistory from './components/QuestionHistory';
 import SuccessModal from './components/SuccessModal';
 import HintPanel from './components/HintPanel';
+import Notification from './components/Notification';
+import { useQuestionGame } from './hooks/useQuestionGame';
 
 const AppContainer = styled.div`
   max-width: 600px;
@@ -22,68 +24,18 @@ const Title = styled.h1`
   color: #1a1a1a;
 `;
 
-// API base URL
-const API_URL = 'http://localhost:8000';
-
 function App() {
-  const [questions, setQuestions] = useState([]);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [hintsUsed, setHintsUsed] = useState(0);
-  const [currentHint, setCurrentHint] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const evaluateQuestion = async (question) => {
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch(`${API_URL}/questions/evaluate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ question }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to evaluate question');
-      }
-      
-      return await response.json();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleNewQuestion = async (question) => {
-    if (questions.length >= 20) {
-      return;
-    }
-    
-    const response = await evaluateQuestion(question);
-    
-    setQuestions([...questions, {
-      question,
-      response: response.answer,
-      relevance: response.relevance,
-      isCorrect: response.isCorrect
-    }]);
-
-    if (response.isCorrect) {
-      setShowSuccess(true);
-    }
-  };
-
-  const useHint = () => {
-    if (hintsUsed < 3) {
-      const hints = [
-        "This is your first hint!",
-        "This is your second hint!",
-        "This is your third and final hint!"
-      ];
-      setCurrentHint(hints[hintsUsed]);
-      setHintsUsed(hintsUsed + 1);
-    }
-  };
+  const {
+    questions,
+    showSuccess,
+    hintsUsed,
+    currentHint,
+    isLoading,
+    notification,
+    handleNewQuestion,
+    useHint,
+    clearNotification
+  } = useQuestionGame();
 
   return (
     <AppContainer>
@@ -95,6 +47,11 @@ function App() {
         hintsUsed={hintsUsed} 
         onUseHint={useHint} 
         currentHint={currentHint}
+      />
+      
+      <Notification 
+        message={notification} 
+        onClear={clearNotification} 
       />
       
       <QuestionInput 
