@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, Request
+from sqlalchemy.orm import Session
 from app.core.limiter import limiter
 from app.api.models.question import Question, QuestionEvaluation
-from app.core.config import DAILY_SOLUTION
 from app.services.llm_service import LLMService
 from app.core.cache import ttl_cache
+from app.database import get_db
+from app.services.solution_service import SolutionService
+
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
@@ -14,9 +17,12 @@ router = APIRouter(prefix="/api/questions", tags=["questions"])
 async def evaluate_question(
     request: Request,
     question: Question,
+    db: Session = Depends(get_db),
     llm_service: LLMService = Depends()
 ):
-    evaluation = await llm_service.evaluate_question(question.text, DAILY_SOLUTION)
+    solution_service = SolutionService(db, llm_service)
+    solution = solution_service.get_current_solution()
+    evaluation = await llm_service.evaluate_question(question.text, solution)
     
     return QuestionEvaluation(
         is_yes_no=evaluation.get("is_yes_no", False),

@@ -12,6 +12,3 @@ if not OPENAI_API_KEY:
 
 # Create OpenAI client
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
-
-# Game configuration
-DAILY_SOLUTION = "Mariah Carey" 
