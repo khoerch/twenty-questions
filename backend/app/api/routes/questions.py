@@ -3,12 +3,14 @@ from app.core.limiter import limiter
 from app.api.models.question import Question, QuestionEvaluation
 from app.core.config import DAILY_SOLUTION
 from app.services.llm_service import LLMService
+from app.core.cache import ttl_cache
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
 @router.post("/evaluate", response_model=QuestionEvaluation)
 @limiter.limit("20/minute")
 @limiter.limit("100/day")
+@ttl_cache(namespace="question_evaluations", maxsize=100, ttl_seconds=86400)
 async def evaluate_question(
     request: Request,
     question: Question,

@@ -4,7 +4,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 import logging
 from app.core.limiter import limiter
-from app.api.routes import questions, solutions, health
+from app.api.routes import questions, solutions, health, admin
 from app.database import init_db
 from app.services.scheduler_service import SchedulerService
 from app.services.llm_service import LLMService
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(questions.router)
 app.include_router(solutions.router)
 app.include_router(health.router)
+app.include_router(admin.router)
 
 # Initialize scheduler
 scheduler_service = SchedulerService()

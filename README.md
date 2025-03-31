@@ -141,5 +141,9 @@ twenty-questions/
     - Added a FastAPI backend, but it's a very basic implementation. 
 4. Implement the LLM integration for processing questions
     - Consider caching and rate limiting to avoid high costs
+    - Rate limiting was added
+    - Caching was added but not working currently. I should consider caching specific functions instead of endpoints. 
 5. Create a daily answer system
+    - Added a daily answer system!
+    - A scheduler runs daily to generate a new answer
 6. Add local storage for maintaining game state

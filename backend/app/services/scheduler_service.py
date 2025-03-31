@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.services.solution_service import SolutionService
 from app.database import get_db
 from app.services.llm_service import LLMService
+from app.core.cache import reset_all_caches
 
 logger = logging.getLogger(__name__)
 
@@ -50,5 +51,8 @@ class SchedulerService:
                 logger.info(f"Generated solution for {today}: {solution.solution}")
             else:
                 logger.warning(f"Failed to generate solution for {today}")
+            
+            # Reset all caches when generating a new solution
+            reset_all_caches()
         except Exception as e:
             logger.error(f"Error generating daily solution: {e}") 

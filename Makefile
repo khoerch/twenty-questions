@@ -19,6 +19,11 @@ start-backend:
 	. venv/bin/activate && \
 	python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
+start-backend-debug:
+	cd backend && \
+	. venv/bin/activate && \
+	python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --log-level debug
+
 # Combined commands
 install: install-frontend install-backend
 
