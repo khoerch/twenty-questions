@@ -2,8 +2,28 @@ import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 
 const NotificationContainer = styled.div`
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: ${props => {
+    switch (props.type) {
+      case 'INFO':
+        return '#e3f2fd';
+      case 'WARNING':
+        return '#fff3e0';
+      case 'ERROR':
+      default:
+        return '#ffebee';
+    }
+  }};
+  color: ${props => {
+    switch (props.type) {
+      case 'INFO':
+        return '#0d47a1';
+      case 'WARNING':
+        return '#e65100';
+      case 'ERROR':
+      default:
+        return '#c62828';
+    }
+  }};
   padding: 10px 15px;
   border-radius: 4px;
   margin-bottom: 15px;
@@ -17,7 +37,7 @@ const NotificationContainer = styled.div`
   }
 `;
 
-const Notification = ({ message, onClear }) => {
+const Notification = ({ message, type = 'ERROR', onClear }) => {
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
@@ -30,7 +50,7 @@ const Notification = ({ message, onClear }) => {
 
   if (!message) return null;
   
-  return <NotificationContainer>{message}</NotificationContainer>;
+  return <NotificationContainer type={type}>{message}</NotificationContainer>;
 };
 
 export default Notification; 

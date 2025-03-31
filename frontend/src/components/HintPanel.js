@@ -18,28 +18,14 @@ const HintButton = styled.button`
   margin-right: 10px;
 `;
 
-const HintText = styled.div`
-  margin-top: 10px;
-  font-style: italic;
-`;
-
-function HintPanel({ hintsUsed, onUseHint, currentHint }) {
+function HintPanel({ hintUsed, onUseHint }) {
   return (
     <Panel>
       <div>
-        <HintButton 
-          onClick={onUseHint} 
-          disabled={hintsUsed >= 3}
-        >
-          Get Hint ({3 - hintsUsed} remaining)
+        <HintButton onClick={onUseHint}>
+          {hintUsed ? "See Hint!" : "Get Hint?"}
         </HintButton>
       </div>
-      
-      {currentHint && (
-        <HintText>
-          Hint: {currentHint}
-        </HintText>
-      )}
     </Panel>
   );
 }

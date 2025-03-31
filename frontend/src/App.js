@@ -28,10 +28,10 @@ function App() {
   const {
     questions,
     showSuccess,
-    hintsUsed,
-    currentHint,
+    hintUsed,
     isLoading,
     notification,
+    notificationType,
     handleNewQuestion,
     useHint,
     clearNotification
@@ -44,13 +44,13 @@ function App() {
       </Header>
       
       <HintPanel 
-        hintsUsed={hintsUsed} 
+        hintUsed={hintUsed} 
         onUseHint={useHint} 
-        currentHint={currentHint}
       />
       
       <Notification 
         message={notification} 
+        type={notificationType}
         onClear={clearNotification} 
       />
       
@@ -64,7 +64,7 @@ function App() {
       {showSuccess && (
         <SuccessModal 
           attempts={questions.length}
-          hintsUsed={hintsUsed}
+          hintUsed={hintUsed}
         />
       )}
     </AppContainer>

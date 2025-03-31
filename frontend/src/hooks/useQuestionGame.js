@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { evaluateQuestion } from '../api/questionService';
+import { getTodaysHint } from '../api/solutionService';
+
 
 export const useQuestionGame = () => {
   const [questions, setQuestions] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [hintsUsed, setHintsUsed] = useState(0);
+  const [hintUsed, setHintUsed] = useState(false);
   const [currentHint, setCurrentHint] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState('');
+  const [notificationType, setNotificationType] = useState('ERROR');
 
   const handleNewQuestion = async (question) => {
     if (questions.length >= 20) {
@@ -21,6 +24,7 @@ export const useQuestionGame = () => {
       
       if (response.is_yes_no === false || response.isYesNo === false) {
         setNotification("Please ask a yes/no question!");
+        setNotificationType('WARNING');
         setTimeout(() => setNotification(''), 5000);
         return;
       }
@@ -37,35 +41,49 @@ export const useQuestionGame = () => {
       }
     } catch (error) {
       setNotification("Error evaluating question. Please try again.");
+      setNotificationType('ERROR');
       setTimeout(() => setNotification(''), 5000);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const useHint = () => {
-    if (hintsUsed < 3) {
-      const hints = [
-        "This is your first hint!",
-        "This is your second hint!",
-        "This is your third and final hint!"
-      ];
-      setCurrentHint(hints[hintsUsed]);
-      setHintsUsed(hintsUsed + 1);
+  const useHint = async () => {
+    if (hintUsed) {
+      setNotification(`Hint: ${currentHint}`);
+      setNotificationType('INFO');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const hintData = await getTodaysHint();
+      setHintUsed(true);
+      setCurrentHint(hintData.hint);
+      setNotification(`Hint: ${hintData.hint}`);
+      setNotificationType('INFO');
+    } catch (error) {
+      setNotification("Failed to fetch hint. Please try again.");
+      setNotificationType('ERROR');
+      console.error("Error fetching hint:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const clearNotification = () => {
     setNotification('');
+    setNotificationType('ERROR');
   };
 
   return {
     questions,
     showSuccess,
-    hintsUsed,
+    hintUsed,
     currentHint,
     isLoading,
     notification,
+    notificationType,
     handleNewQuestion,
     useHint,
     clearNotification

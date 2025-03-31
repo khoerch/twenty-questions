@@ -33,6 +33,11 @@ const Stats = styled.div`
   font-size: 18px;
 `;
 
+const HintStatus = styled.span`
+  color: ${props => props.used ? '#e53e3e' : '#38a169'};
+  margin-left: 5px;
+`;
+
 const CloseButton = styled.button`
   padding: 10px 20px;
   background-color: #2c5282;
@@ -43,7 +48,7 @@ const CloseButton = styled.button`
   font-size: 16px;
 `;
 
-function SuccessModal({ attempts, hintsUsed }) {
+function SuccessModal({ attempts, hintUsed }) {
   return (
     <ModalOverlay>
       <ModalContent>
@@ -51,7 +56,12 @@ function SuccessModal({ attempts, hintsUsed }) {
         <p>You've guessed the correct answer!</p>
         <Stats>
           <p>Attempts: {attempts}/20</p>
-          <p>Hints used: {hintsUsed}/3</p>
+          <p>
+            Hint used: 
+            <HintStatus used={hintUsed}>
+              {hintUsed ? '✗' : '✓'}
+            </HintStatus>
+          </p>
         </Stats>
         <CloseButton onClick={() => window.location.reload()}>
           Play Again
