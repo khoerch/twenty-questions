@@ -21,7 +21,6 @@ async def evaluate_question(
 ):
     solution_service = SolutionService(db, llm_service)
     solution_details = await solution_service.get_current_solution()
-    logger.info(f"Evaluating question: {question.text} against solution: {solution_details.solution}")
     evaluation = await llm_service.evaluate_question(question.text, solution_details.solution)
     
     return QuestionEvaluation(
