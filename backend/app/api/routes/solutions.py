@@ -7,7 +7,6 @@ from app.database import get_db, Solution
 from app.services.solution_service import SolutionService
 from app.services.llm_service import LLMService
 from app.api.models.solution import SolutionCreateRequest, SolutionFullResponse, SolutionHintResponse
-from app.core.cache import ttl_cache
 
 router = APIRouter(prefix="/api/solutions", tags=["solutions"])
 
@@ -15,7 +14,6 @@ router = APIRouter(prefix="/api/solutions", tags=["solutions"])
 @router.get("/current/hint", response_model=SolutionHintResponse)
 @limiter.limit("20/minute")
 @limiter.limit("100/day")
-@ttl_cache(namespace="solution_hints", maxsize=1, ttl_seconds=86400)  # Cache for 24 hours
 async def get_current_solution_hint(
     request: Request,
     db: Session = Depends(get_db),
@@ -23,7 +21,7 @@ async def get_current_solution_hint(
 ):
     """Get the current day's solution hint."""
     solution_service = SolutionService(db, llm_service)
-    solution = solution_service.get_current_solution()
+    solution = await solution_service.get_current_solution()
     
     if not solution:
         solution = solution_service.generate_solution_for_date(datetime.now(timezone.utc).date())

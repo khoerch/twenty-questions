@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.database import Solution
 from app.services.llm_service import LLMService
-
+from app.core.cache import ttl_cache
 logger = logging.getLogger(__name__)
 
 class SolutionService:
@@ -17,7 +17,8 @@ class SolutionService:
         solution = self.db.query(Solution).filter(Solution.date == date).first()
         return solution
 
-    def get_current_solution(self):
+    @ttl_cache(namespace="solution_hints", maxsize=1, ttl_seconds=86400)  # Cache for 24 hours
+    async def get_current_solution(self):
         """Get the solution for today."""
         today = datetime.now(timezone.utc).date()
         return self.get_solution_for_date(today)
