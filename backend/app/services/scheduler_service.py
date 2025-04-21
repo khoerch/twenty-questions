@@ -1,10 +1,8 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from sqlalchemy.orm import Session
 from app.services.solution_service import SolutionService
-from app.database import get_db
 from app.services.llm_service import LLMService
 from app.core.cache import reset_all_caches
 

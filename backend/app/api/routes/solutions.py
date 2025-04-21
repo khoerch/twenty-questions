@@ -1,7 +1,7 @@
 from datetime import datetime, date, timezone
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Request
-from sqlalchemy.orm import Session
+from firebase_admin.firestore import Client
 from app.core.limiter import limiter
 from app.database import get_db, Solution
 from app.services.solution_service import SolutionService
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/solutions", tags=["solutions"])
 @limiter.limit("100/day")
 async def get_current_solution_hint(
     request: Request,
-    db: Session = Depends(get_db),
+    db: Client = Depends(get_db),
     llm_service: LLMService = Depends()
 ):
     """Get the current day's solution hint."""
@@ -36,7 +36,7 @@ async def get_current_solution_hint(
 async def create_future_solution(
     request: Request,
     solution_request: SolutionCreateRequest,
-    db: Session = Depends(get_db),
+    db: Client = Depends(get_db),
     llm_service: LLMService = Depends()
 ):
     """Create a solution for a future date."""
@@ -66,16 +66,3 @@ async def create_future_solution(
         raise HTTPException(status_code=500, detail="Failed to create solution")
         
     return solution
-
-@router.get("/admin/all", response_model=List[SolutionFullResponse])
-@limiter.limit("20/minute")
-@limiter.limit("100/day")
-async def get_all_solutions(
-    request: Request,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100
-):
-    """Admin endpoint to get all solutions."""
-    solutions = db.query(Solution).offset(skip).limit(limit).all()
-    return solutions 

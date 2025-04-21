@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter, Depends, Request
-from sqlalchemy.orm import Session
+from firebase_admin.firestore import Client
 from app.core.limiter import limiter
 from app.api.models.question import Question, QuestionEvaluation
 from app.services.llm_service import LLMService
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/questions", tags=["questions"])
 async def evaluate_question(
     request: Request,
     question: Question,
-    db: Session = Depends(get_db),
+    db: Client = Depends(get_db),
     llm_service: LLMService = Depends()
 ):
     solution_service = SolutionService(db, llm_service)

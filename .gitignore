@@ -43,3 +43,6 @@ Thumbs.db
 
 # DB
 app.db
+
+# Google Firebase
+firebase.json
